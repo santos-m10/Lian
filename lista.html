@@ -12,67 +12,90 @@
 
         body {
             margin: 0;
+            padding: 20px;
             font-family: Arial, Helvetica, sans-serif;
             background: #1b1b1b;
             color: white;
-            padding: 20px;
 
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Título */
+        /* título */
         h1 {
             text-align: center;
             margin-bottom: 25px;
         }
 
-        /* Container lista */
+        /* container principal */
         #lista {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
 
             display: grid;
-            gap: 15px;
+            gap: 18px;
 
-            /* celular */
             grid-template-columns: 1fr;
         }
 
-        /* Tablet */
+        /* tablet */
         @media(min-width:600px) {
             #lista {
                 grid-template-columns: 1fr 1fr;
             }
         }
 
-        /* Notebook */
+        /* notebook */
         @media(min-width:900px) {
             #lista {
                 grid-template-columns: 1fr 1fr 1fr;
             }
         }
 
-        /* Card */
+        /* card */
         .card {
             background: #2a2a2a;
             padding: 18px;
-            border-radius: 14px;
+            border-radius: 16px;
 
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
 
             transition: 0.2s;
         }
 
         .card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
         }
 
-        .card strong {
+        /* status */
+        .status {
+            font-weight: bold;
+            padding: 6px 10px;
+            border-radius: 10px;
+            width: fit-content;
+        }
+
+        .vai {
+            background: #2ecc71;
+            color: #000;
+        }
+
+        .nao {
+            background: #e74c3c;
+        }
+
+        /* textos */
+        .label {
             color: #f4b36c;
+            font-weight: bold;
         }
     </style>
+
 
 
 </head>
@@ -89,6 +112,7 @@
 
     <script>
 
+
         const firebaseConfig = {
             apiKey: "AIzaSyBp1Eg-iBbpRnvPs7myiwGsBqe3OS_lF6Q",
             authDomain: "safari-999a2.firebaseapp.com",
@@ -103,37 +127,35 @@
 
         const lista = document.getElementById("lista");
 
-        db.collection("confirmacoes").orderBy("data", "desc").onSnapshot(snapshot => {
+        db.collection("confirmacoes")
+            .orderBy("data", "desc")
+            .get()
+            .then(snapshot => {
 
-            lista.innerHTML = "";
+                snapshot.forEach(doc => {
 
-            snapshot.forEach(doc => {
+                    const d = doc.data();
 
-                const dados = doc.data();
+                    const card = document.createElement("div");
+                    card.className = "card";
 
-                let html = `<div class="card">`;
+                    card.innerHTML = `
+<div class="status ${d.status === "vai" ? "vai" : "nao"}">
+${d.status.toUpperCase()}
+</div>
 
-                html += `<strong>Status:</strong> ${dados.status}<br>`;
+<div><span class="label">Adultos:</span> ${d.adultos?.join(", ") || "-"}</div>
+<div><span class="label">Crianças:</span> ${d.criancas?.join(", ") || "-"}</div>
+<div><span class="label">Nome:</span> ${d.nome || "-"}</div>
+`;
 
-                if (dados.adultos) {
-                    html += `<strong>Adultos:</strong> ${dados.adultos.join(", ")}<br>`;
-                }
+                    lista.appendChild(card);
 
-                if (dados.criancas) {
-                    html += `<strong>Crianças:</strong> ${dados.criancas.join(", ")}<br>`;
-                }
-
-                if (dados.nome) {
-                    html += `<strong>Nome:</strong> ${dados.nome}<br>`;
-                }
-
-                html += `</div>`;
-
-                lista.innerHTML += html;
+                });
 
             });
 
-        });
+
 
     </script>
 
