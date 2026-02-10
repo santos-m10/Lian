@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Confirmações</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #1b1b1b;
+            color: white;
+            padding: 20px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Título */
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Container lista */
+        #lista {
+            width: 100%;
+            max-width: 1000px;
+
+            display: grid;
+            gap: 15px;
+
+            /* celular */
+            grid-template-columns: 1fr;
+        }
+
+        /* Tablet */
+        @media(min-width:600px) {
+            #lista {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Notebook */
+        @media(min-width:900px) {
+            #lista {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        /* Card */
+        .card {
+            background: #2a2a2a;
+            padding: 18px;
+            border-radius: 14px;
+
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card strong {
+            color: #f4b36c;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <h1>🦁 Confirmações do Safari</h1>
+
+    <div id="lista"></div>
+
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBp1Eg-iBbpRnvPs7myiwGsBqe3OS_lF6Q",
+            authDomain: "safari-999a2.firebaseapp.com",
+            projectId: "safari-999a2",
+            storageBucket: "safari-999a2.firebasestorage.app",
+            messagingSenderId: "73459075157",
+            appId: "1:73459075157:web:5a509308b51ba9a52d2cdc"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const lista = document.getElementById("lista");
+
+        db.collection("confirmacoes").orderBy("data", "desc").onSnapshot(snapshot => {
+
+            lista.innerHTML = "";
+
+            snapshot.forEach(doc => {
+
+                const dados = doc.data();
+
+                let html = `<div class="card">`;
+
+                html += `<strong>Status:</strong> ${dados.status}<br>`;
+
+                if (dados.adultos) {
+                    html += `<strong>Adultos:</strong> ${dados.adultos.join(", ")}<br>`;
+                }
+
+                if (dados.criancas) {
+                    html += `<strong>Crianças:</strong> ${dados.criancas.join(", ")}<br>`;
+                }
+
+                if (dados.nome) {
+                    html += `<strong>Nome:</strong> ${dados.nome}<br>`;
+                }
+
+                html += `</div>`;
+
+                lista.innerHTML += html;
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>
