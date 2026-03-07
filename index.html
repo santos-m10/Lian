@@ -2,160 +2,419 @@
 <html lang="pt-br">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Safari do Lian</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safari do Lian</title>
 
-<style>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #1b1b1b;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
-}
+        .convite {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+        }
 
-body{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(180deg,#1b1b1b,#2a2a2a);
-    padding:20px;
-}
+        .convite img {
+            width: 100%;
+            display: block;
+        }
 
-/* CONTAINER */
+        /* BOTÕES INVISÍVEIS NAS PLACAS */
+        .botao-invisivel {
+            position: absolute;
+            right: 8%;
+            bottom: 32%;
+            width: 30%;
+            height: 12%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
 
-.container{
-    width:100%;
-    max-width:420px;
-}
+        .botao-guia {
+            position: absolute;
+            left: 8%;
+            bottom: 32%;
+            width: 30%;
+            height: 12%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
 
-/* CAIXA SAFARI */
+        /* POPUPS */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
 
-.safari-box{
-    background:#fff8f0;
-    border-radius:24px;
-    padding:28px;
-    border:2px solid #f1e3d3;
-    box-shadow:0 15px 40px rgba(0,0,0,0.25);
-    text-align:center;
-}
+        }
 
-/* EMOJI */
+        .safari-box {
+            background: #fff8f0;
+            border-radius: 24px;
+            padding: 25px;
+            border: 2px solid #f1e3d3;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
 
-.emoji{
-    font-size:48px;
-    margin-bottom:12px;
-    animation:balanco 2s infinite ease-in-out;
-}
+        .titulo {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
-/* TITULO */
+        .input-safari {
+            width: 100%;
+            padding: 9px;
+            margin-top: 10px;
+            border-radius: 16px;
+            border: 2px solid #f3d7b8;
+            font-size: 15px;
+        }
 
-.titulo{
-    font-size:24px;
-    font-weight:bold;
-    margin-bottom:8px;
-}
+        .input-safari:focus {
+            outline: none;
+            border: 2px solid #f4b36c;
+            box-shadow: 0 0 0 4px rgba(244, 179, 108, .15);
+        }
 
-/* TEXTO */
+        .btn-add {
+            margin-top: 10px;
+            background: #fff3e6;
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
 
-.texto{
-    font-size:16px;
-    line-height:1.5;
-    color:#333;
-}
+        .contador {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
 
-/* DICA SAFARI */
+        .contador button {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: #f4b36c;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
 
-.dica{
-    margin-top:18px;
-    background:#fff3e6;
-    padding:14px;
-    border-radius:14px;
-    font-weight:bold;
-    color:#7a4d16;
-}
+        .acoes {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
 
-/* PEGADAS */
+        .cancelar {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 3px solid #1f1f1f;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-.pegadas{
-    margin-top:18px;
-    font-size:20px;
-    opacity:0.6;
-    letter-spacing:6px;
-}
+        .confirmar {
+            background: #f4b36c;
+            color: white;
+            padding: 14px 22px;
+            border: none;
+            border-radius: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+        }
 
-/* ANIMAÇÃO */
+        /* TABELA GUIA */
+        .tabela {
+            margin-top: 15px;
+            background: white;
+            border-radius: 14px;
+            padding: 10px;
+            border: 2px solid #f1e3d3;
+        }
 
-@keyframes balanco{
-    0%{transform:rotate(0deg)}
-    25%{transform:rotate(6deg)}
-    50%{transform:rotate(0deg)}
-    75%{transform:rotate(-6deg)}
-    100%{transform:rotate(0deg)}
-}
+        .linha {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-weight: bold;
+        }
 
-/* RESPONSIVIDADE */
-
-@media (max-width:480px){
-
-    .safari-box{
-        padding:22px;
-    }
-
-    .titulo{
-        font-size:22px;
-    }
-
-    .texto{
-        font-size:15px;
-    }
-
-    .emoji{
-        font-size:42px;
-    }
-
-}
-
-</style>
+        .linha:last-child {
+            border-bottom: none;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="convite">
+        <img src="img/convite.png" alt="Convite Safari do Lian">
 
-    <div class="safari-box">
-
-        <div class="emoji">🦁</div>
-
-        <div class="titulo">
-            Safari Encerrado
-        </div>
-
-        <div class="texto">
-            O prazo para confirmar presença no<br>
-            <b>Safari do Lian</b> já terminou.
-        </div>
-
-        <div class="dica">
-            ⏳ A aventura já começou!
-        </div>
-
-        <div class="pegadas">
-            🐾 🐾 🐾
-        </div>
-
+        <!-- placas -->
+        <button id="abrirConfirmacao" class="botao-invisivel" aria-label="Confirmar presença"></button>
+        <button id="abrirGuia" class="botao-guia" aria-label="Guia de tamanhos"></button>
     </div>
 
+    <!-- POPUP ESCOLHA -->
+    <div id="popupEscolha" class="popup">
+        <div class="safari-box">
+            <div class="titulo">Confirma presença? 🦁</div>
+            <div class="acoes" style="gap:10px;">
+                <button id="btnVai" class="confirmar" style="flex:1;">🎉 Sim</button>
+                <button id="btnNao" class="cancelar" style="flex:1;">😢 Não</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- POPUP ENCERRADO -->
+    <div id="popupEncerrado" class="popup">
+        <div class="safari-box">
+            <div class="emoji">🦁</div>
+            <div class="titulo">
+                Safari Encerrado
+            </div>
+            <div class="texto">
+                O prazo para confirmar presença<br>
+                no <b>Safari do Lian</b> já terminou.
+            </div>
+            <div class="dica">
+                ⏳ A aventura vai começar!
+            </div>
+            <div class="acoes" style="margin-top:20px;">
+                <button class="confirmar fechar" style="width:100%;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP QUEM VAI -->
+    <div id="popupVai" class="popup">
+        <div class="safari-box">
+
+            <div class="titulo">🧭 Quem vai na aventura? 🦁</div>
+
+            <label>Nomes dos adultos</label>
+            <div id="adultosContainer">
+                <input class="input-safari adulto" placeholder="Nome do adulto 1">
+            </div>
+
+            <button id="addAdulto" class="btn-add">+ Adicionar outro adulto</button>
+
+            <label style="display:block;margin-top:18px;font-weight:bold;">
+                👶 Quantas crianças virão?
+            </label>
+
+            <div class="contador">
+                <button id="menos">-</button>
+                <span id="contador">1</span>
+                <button id="mais">+</button>
+            </div>
+
+            <div id="criancasContainer">
+                <input class="input-safari crianca" placeholder="Nome da criança 1">
+            </div>
+
+            <div class="acoes">
+                <button class="cancelar fechar">Cancelar</button>
+                <button id="salvarVai" class="confirmar">Confirmar 🎉</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- POPUP NÃO VAI -->
+    <div id="popupNao" class="popup">
+        <div class="safari-box">
+            <div class="titulo">Que pena 😢</div>
+            <input id="nomeNao" class="input-safari" placeholder="Seu nome">
+            <div class="acoes">
+                <button class="cancelar fechar">Cancelar</button>
+                <button id="salvarNao" class="confirmar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP GUIA -->
+    <!-- POPUP GUIA -->
+<div id="popupGuia" class="popup">
+    <div class="safari-box">
+        <div class="titulo">📏 Guia de Tamanho Safari</div>
+
+        <div class="tabela">
+
+            <div class="linha" style="font-size:18px;">
+                <span>👕 Roupa</span>
+                <span style="color:#f4b36c;">02 ou 03</span>
+            </div>
+
+            <div class="linha" style="font-size:18px;">
+                <span>👟 Sapato</span>
+                <span style="color:#f4b36c;">20/21 ou 21/22</span>
+            </div>
+
+        </div>
+
+        <div style="
+            margin-top:15px;
+            background:#fff3e6;
+            padding:12px;
+            border-radius:12px;
+            text-align:center;
+            font-weight:bold;
+        ">
+            🦁 Dica Safari:<br>
+            Prefira roupas leves e confortáveis para a aventura!
+        </div>
+
+        <div class="acoes">
+            <button class="confirmar fechar" style="width:100%;">Fechar</button>
+        </div>
+    </div>
 </div>
 
-<script>
 
-/* Pequeno efeito de console apenas decorativo */
-console.log("Convite encerrado 🦁");
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-</script>
+    <script>
+        /* ===== FIREBASE ===== */
+        const firebaseConfig = {
+            apiKey: "AIzaSyBp1Eg-iBbpRnvPs7myiwGsBqe3OS_lF6Q",
+            authDomain: "safari-999a2.firebaseapp.com",
+            projectId: "safari-999a2",
+            storageBucket: "safari-999a2.firebasestorage.app",
+            messagingSenderId: "73459075157",
+            appId: "1:73459075157:web:5a509308b51ba9a52d2cdc"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+
+        /* ===== ELEMENTOS ===== */
+        const popupEscolha = document.getElementById("popupEscolha");
+        const popupVai = document.getElementById("popupVai");
+        const popupNao = document.getElementById("popupNao");
+        const popupGuia = document.getElementById("popupGuia");
+
+        /* ===== ABRIR PLACAS ===== */
+        document.getElementById("abrirConfirmacao").onclick = () => {
+            // em vez de abrir o formulário, mostramos a mensagem de prazo encerrado
+            const popupEncerrado = document.getElementById("popupEncerrado");
+            popupEncerrado.style.display = "flex";
+        };
+        document.getElementById("abrirGuia").onclick = () => {
+            popupGuia.style.display = "flex";
+        };
+
+        /* ===== ESCOLHA ===== */
+        document.getElementById("btnVai").onclick = () => {
+            popupEscolha.style.display = "none";
+            popupVai.style.display = "flex";
+        };
+        document.getElementById("btnNao").onclick = () => {
+            popupEscolha.style.display = "none";
+            popupNao.style.display = "flex";
+        };
+
+        /* ===== FECHAR ===== */
+        document.querySelectorAll(".fechar").forEach(btn => {
+            btn.onclick = () => btn.closest(".popup").style.display = "none";
+        });
+
+        /* ===== ADULTOS DINÂMICOS ===== */
+        document.getElementById("addAdulto").onclick = () => {
+            const i = document.querySelectorAll(".adulto").length + 1;
+            const input = document.createElement("input");
+            input.className = "input-safari adulto";
+            input.placeholder = "Nome do adulto " + i;
+            document.getElementById("adultosContainer").appendChild(input);
+        };
+
+        /* ===== CONTADOR CRIANÇAS ===== */
+        let totalCriancas = 1;
+        const contadorEl = document.getElementById("contador");
+        const criancasContainer = document.getElementById("criancasContainer");
+
+        function renderCriancas() {
+            contadorEl.innerText = totalCriancas;
+            criancasContainer.innerHTML = "";
+            for (let i = 1; i <= totalCriancas; i++) {
+                const input = document.createElement("input");
+                input.className = "input-safari crianca";
+                input.placeholder = "Nome da criança " + i;
+                criancasContainer.appendChild(input);
+            }
+        }
+        document.getElementById("mais").onclick = () => {
+            totalCriancas++; renderCriancas();
+        };
+        document.getElementById("menos").onclick = () => {
+            if (totalCriancas > 1) { totalCriancas--; renderCriancas(); }
+        };
+
+        /* ===== SALVAR VAI ===== */
+        document.getElementById("salvarVai").onclick = async () => {
+            const adultos = [...document.querySelectorAll(".adulto")].map(i => i.value).filter(v => v);
+            const criancas = [...document.querySelectorAll(".crianca")].map(i => i.value).filter(v => v);
+
+            await db.collection("confirmacoes").add({
+                status: "vai",
+                adultos,
+                criancas,
+                data: new Date()
+            });
+
+            alert("Presença confirmada!");
+            location.reload();
+        };
+
+        /* ===== SALVAR NÃO VAI ===== */
+        document.getElementById("salvarNao").onclick = async () => {
+            const nome = document.getElementById("nomeNao").value;
+
+            await db.collection("confirmacoes").add({
+                status: "nao vai",
+                nome,
+                data: new Date()
+            });
+
+            alert("Registrado!");
+            location.reload();
+        };
+    </script>
 
 </body>
+
 </html>
